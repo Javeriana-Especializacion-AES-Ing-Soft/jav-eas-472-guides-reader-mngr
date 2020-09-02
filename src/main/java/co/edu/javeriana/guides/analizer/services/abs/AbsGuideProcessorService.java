@@ -15,8 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 public abstract class AbsGuideProcessorService implements IGuideProcessorService {
@@ -27,11 +25,11 @@ public abstract class AbsGuideProcessorService implements IGuideProcessorService
     private String cognitivePathRead;
     private String cognitivePathDownload;
 
-    private RestTemplate restTemplate;
-
     private String bucketName;
     private String formExtractType;
     private String rootDirectory;
+
+    private RestTemplate restTemplate;
 
     protected JsonNode callReadCognitiveService(String guideExtension, byte[] guide, UUID processId) throws CognitiveServiceCallException {
         LOGGER.info("[ID:{}] inicia llamado de servicio cognitivo para reconocimiento de caracteres.", processId);
@@ -39,10 +37,9 @@ public abstract class AbsGuideProcessorService implements IGuideProcessorService
         getCommonHeaders(headers);
         getReadHeaders(headers, guideExtension);
         HttpEntity<byte[]> requestEntity = new HttpEntity<>(guide, headers);
-        Map<String, String> param = new HashMap<>();
         String endpoint = cognitiveEndpoint.concat(cognitivePathRead);
         try {
-            ResponseEntity<JsonNode> response = restTemplate.exchange(endpoint, HttpMethod.POST, requestEntity, JsonNode.class, param);
+            ResponseEntity<JsonNode> response = restTemplate.exchange(endpoint, HttpMethod.POST, requestEntity, JsonNode.class);
             LOGGER.info("[ID:{}] finaliza llamado de servicio cognitivo para reconocimiento de caracteres.", processId);
             return response.getBody();
         } catch (RestClientException e) {
@@ -56,10 +53,9 @@ public abstract class AbsGuideProcessorService implements IGuideProcessorService
         HttpHeaders headers = new HttpHeaders();
         getCommonHeaders(headers);
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
-        Map<String, String> param = new HashMap<>();
         String endpoint = cognitiveEndpoint.concat(cognitivePathDownload).replace("{@uuid}", documentId.toString());
         try {
-            ResponseEntity<byte[]> response = restTemplate.exchange(endpoint, HttpMethod.GET, requestEntity, byte[].class, param);
+            ResponseEntity<byte[]> response = restTemplate.exchange(endpoint, HttpMethod.GET, requestEntity, byte[].class);
             LOGGER.info("[DOCUMENTO_ID:{}] finaliza llamado de servicio cognitivo para descarga de guia.", documentId);
             return response.getBody();
         } catch (RestClientException e) {

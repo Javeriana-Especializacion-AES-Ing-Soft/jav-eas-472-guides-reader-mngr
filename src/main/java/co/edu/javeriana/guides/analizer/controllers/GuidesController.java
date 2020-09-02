@@ -36,7 +36,7 @@ public class GuidesController {
     }
 
     @GetMapping("{uuid}")
-    public ResponseEntity<String> processGuide(@PathVariable UUID uuid) {
+    public ResponseEntity<String> downloadGuide(@PathVariable UUID uuid) {
         try {
             LOGGER.info("[DOCUMENTO_ID:{}] INICIA PROCESO DE DESCARGA DE IMAGEN GUIA", uuid);
             String response = guideProcessorService.downloadGuide(uuid);

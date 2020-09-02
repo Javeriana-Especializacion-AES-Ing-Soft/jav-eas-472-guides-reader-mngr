@@ -5,6 +5,10 @@ import co.edu.javeriana.guides.analizer.exceptions.AbsGuideAnalyzerException;
 
 public class CognitiveServiceCallException extends AbsGuideAnalyzerException {
 
+    public CognitiveServiceCallException(GuideAnalyzerExceptionCode exceptionCode) {
+        super(exceptionCode);
+    }
+
     public CognitiveServiceCallException(GuideAnalyzerExceptionCode exceptionCode, String causeMessage) {
         super(exceptionCode, causeMessage);
     }
