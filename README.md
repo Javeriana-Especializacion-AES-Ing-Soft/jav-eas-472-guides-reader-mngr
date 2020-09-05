@@ -16,7 +16,7 @@
 * Si usa docker, ejecute:
     * `docker build -t guides-reader-mngr:0.1 .` Para generar la imagen.
     * `docker run --network cognitive-network -ti --name guides-reader-mngr_01 -p 9096:9096 guides-reader-mngr:0.1` Para ejecutar la imagen en el contenedor. Reemplace {access} y {secret} por las credenciales de IAM en requisitos.
-* Si no usa docker, simplemente `Run` sobre JavEas472GuidesReaderMngrApplication.class
+* Si no usa docker, simplemente `Run` sobre JavEas472GuidesReaderMngrApplication.class y modifique el application.properties `http://cognitive-mngr-01:9095` por `http://localhost:9095`
 
 ### Recurso:
 
