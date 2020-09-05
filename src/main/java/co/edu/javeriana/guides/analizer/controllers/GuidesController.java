@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @CrossOrigin("*") // NO SONAR
-@RequestMapping("guides")
+@RequestMapping("/V1/Enterprise/guides")
 @RestController
 public class GuidesController {
 
@@ -31,6 +31,7 @@ public class GuidesController {
             LOGGER.info("[ID:{}] FINALIZA PROCESO DE ANALISIS DE GUIA Y MAPEO DE CAMPOS REQUERIDOS", processId);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (AbsGuideAnalyzerException e) {
+            LOGGER.error("ERROR GENERADO: ", e);
             return new ResponseEntity<>(e.getExceptionCode().getCode());
         }
     }
@@ -43,6 +44,7 @@ public class GuidesController {
             LOGGER.info("[DOCUMENTO_ID:{}] FINALIZA PROCESO DE DESCARGA DE IMAGEN GUIA", uuid);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (AbsGuideAnalyzerException e) {
+            LOGGER.error("ERROR GENERADO: ", e);
             return new ResponseEntity<>(e.getExceptionCode().getCode());
         }
     }
