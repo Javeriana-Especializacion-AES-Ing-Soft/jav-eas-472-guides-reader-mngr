@@ -3,7 +3,7 @@ package co.edu.javeriana.guides.analizer.dtos;
 public class BasicInfoDto {
 
     private String address;
-    private String cell;
+    private String phoneNumber;
     private String name;
     private String state;
 
@@ -15,12 +15,12 @@ public class BasicInfoDto {
         this.address = address;
     }
 
-    public String getCell() {
-        return cell;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setCell(String cell) {
-        this.cell = cell;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getName() {

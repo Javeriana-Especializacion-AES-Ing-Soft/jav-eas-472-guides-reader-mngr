@@ -21,6 +21,7 @@ public abstract class AbsGuideProcessorService implements IGuideProcessorService
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbsGuideProcessorService.class);
 
+    protected double acceptablePercentage;
     private String cognitiveEndpoint;
     private String cognitivePathRead;
     private String cognitivePathDownload;
@@ -71,6 +72,11 @@ public abstract class AbsGuideProcessorService implements IGuideProcessorService
 
     private void getCommonHeaders(HttpHeaders headers) {
         headers.add("X-Bucket-Name", bucketName);
+    }
+
+    @Value("${guides.analyzer.472.acceptable.percentage}")
+    public void setAcceptablePercentage(double acceptablePercentage) {
+        this.acceptablePercentage = acceptablePercentage;
     }
 
     @Value("${endpoint.cognitive.service.472}")
