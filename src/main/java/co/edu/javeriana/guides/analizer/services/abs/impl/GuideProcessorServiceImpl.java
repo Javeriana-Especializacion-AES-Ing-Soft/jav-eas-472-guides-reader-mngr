@@ -4,6 +4,7 @@ import co.edu.javeriana.guides.analizer.dtos.GuideInfoDto;
 import co.edu.javeriana.guides.analizer.dtos.GuidesRsDto;
 import co.edu.javeriana.guides.analizer.exceptions.AbsGuideAnalyzerException;
 import co.edu.javeriana.guides.analizer.services.abs.AbsGuideProcessorService;
+import co.edu.javeriana.guides.analizer.utilities.JsonUtility;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
@@ -72,6 +73,7 @@ public class GuideProcessorServiceImpl extends AbsGuideProcessorService {
                 || guideInfoDto.getReceiver().getAddress().isEmpty() || guideInfoDto.getReceiver().getName().isEmpty()
                 || guideInfoDto.getReceiver().getState().isEmpty() || guideInfoDto.getReceiver().getPhoneNumber().isEmpty())
         );
+        LOGGER.info("[DOCUMENTO_ID:{}] INFORMACIÓN DEPURADA. [RESPONSE:{}]", guidesRsDto.getUuid(), JsonUtility.getPlainJson(guidesRsDto));
         return guidesRsDto;
     }
 
