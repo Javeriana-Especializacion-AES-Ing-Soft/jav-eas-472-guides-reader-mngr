@@ -39,48 +39,49 @@ public class GuideProcessorServiceImpl extends AbsGuideProcessorService {
         List<JsonNode> address = new ArrayList<>();
         cognitiveExtractGuide.get("cognitiveServiceResponse").get("blocks").forEach(line -> {
             if (line.get("blockType").asText().equals("LINE")) {
-                if (line.get("text").asText().startsWith("Nombre")) {
+                if (line.get("text").asText().toLowerCase().startsWith("nombre")) {
                     names.add(line);
                 }
-                if (line.get("text").asText().startsWith("Direcci")) {
+                if (line.get("text").asText().toLowerCase().startsWith("direcci")) {
                     address.add(line);
                 }
-                if (line.get("text").asText().startsWith("Ciudad")) {
+                if (line.get("text").asText().toLowerCase().startsWith("ciudad") || line.get("text").asText().toLowerCase().startsWith("cludad")) {
                     states.add(line);
                 }
-                if (line.get("text").asText().startsWith("Tel")) {
+                if (line.get("text").asText().toLowerCase().startsWith("tel")) {
                     cellphones.add(line);
                 }
             }
         });
         GuideInfoDto guideInfoDto = new GuideInfoDto();
-        guideInfoDto.getSender().setAddress(address.get(0).get("confidence").asDouble() >= acceptablePercentage ?
-                address.get(0).get("text").asText().concat(":1").split(":")[1] : "");
-        guideInfoDto.getSender().setPhoneNumber(cellphones.get(0).get("confidence").asDouble() >= acceptablePercentage ?
-                cellphones.get(0).get("text").asText().concat(":1").split(":")[1] : "1");
-        guideInfoDto.getSender().setName(names.get(0).get("confidence").asDouble() >= acceptablePercentage ?
-                names.get(0).get("text").asText().concat(":1").split(":")[1] : "");
-        guideInfoDto.getSender().setState(states.get(0).get("confidence").asDouble() >= acceptablePercentage ?
-                states.get(0).get("text").asText().concat(":1").split(":")[1] : "");
-        guideInfoDto.getReceiver().setAddress(address.get(1).get("confidence").asDouble() >= acceptablePercentage ?
-                address.get(1).get("text").asText().concat(":1").split(":")[1] : "");
-        guideInfoDto.getReceiver().setPhoneNumber(cellphones.get(1).get("confidence").asDouble() >= acceptablePercentage ?
-                cellphones.get(1).get("text").asText().concat(":1").split(":")[1] : "1");
-        guideInfoDto.getReceiver().setName(names.get(1).get("confidence").asDouble() >= acceptablePercentage ?
-                names.get(1).get("text").asText().concat(":1").split(":")[1] : "");
-        guideInfoDto.getReceiver().setState(states.get(1).get("confidence").asDouble() >= acceptablePercentage ?
-                states.get(1).get("text").asText().concat(":1").split(":")[1] : "");
+        guideInfoDto.getSender().setAddress(getValue(address, 0));
+        guideInfoDto.getSender().setPhoneNumber(getValue(cellphones, 0));
+        guideInfoDto.getSender().setName(getValue(names, 0));
+        guideInfoDto.getSender().setState(getValue(states, 0));
+        guideInfoDto.getReceiver().setAddress(getValue(address, 1));
+        guideInfoDto.getReceiver().setPhoneNumber(getValue(cellphones, 1));
+        guideInfoDto.getReceiver().setName(getValue(names, 1));
+        guideInfoDto.getReceiver().setState(getValue(states, 1));
         guidesRsDto.setGuideInfo(guideInfoDto);
         String phoneNumberSender = guideInfoDto.getSender().getPhoneNumber();
         String phoneNumberReceiver = guideInfoDto.getReceiver().getPhoneNumber();
         guideInfoDto.getSender().setPhoneNumber(phoneNumberSender.isEmpty() ? "1" : phoneNumberSender);
         guideInfoDto.getReceiver().setPhoneNumber(phoneNumberReceiver.isEmpty() ? "1" : phoneNumberReceiver);
-        guideInfoDto.setComplete(!(guideInfoDto.getSender().getAddress().isEmpty() && guideInfoDto.getSender().getName().isEmpty()
-                && guideInfoDto.getSender().getState().isEmpty() && guideInfoDto.getSender().getPhoneNumber().isEmpty()
-                && guideInfoDto.getReceiver().getAddress().isEmpty() && guideInfoDto.getReceiver().getName().isEmpty()
-                && guideInfoDto.getReceiver().getState().isEmpty() && guideInfoDto.getReceiver().getPhoneNumber().isEmpty())
+        guideInfoDto.setComplete(!(guideInfoDto.getSender().getAddress().isEmpty() || guideInfoDto.getSender().getName().isEmpty()
+                || guideInfoDto.getSender().getState().isEmpty() || guideInfoDto.getSender().getPhoneNumber().isEmpty()
+                || guideInfoDto.getReceiver().getAddress().isEmpty() || guideInfoDto.getReceiver().getName().isEmpty()
+                || guideInfoDto.getReceiver().getState().isEmpty() || guideInfoDto.getReceiver().getPhoneNumber().isEmpty())
         );
         return guidesRsDto;
+    }
+
+    private String getValue(List<JsonNode> listLine, int index) {
+        try {
+            return listLine.get(index).get("confidence").asDouble() >= acceptablePercentage ?
+                    listLine.get(index).get("text").asText().concat(":1").split(":")[1] : "";
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     @Override
